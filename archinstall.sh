@@ -54,8 +54,5 @@ read user
 useradd -m -G wheel -s /bin/bash $user
 passwd $user
 visudo
-su $user
-cd ~
-git clone https://aur.archlinux.org/yay.git && cd yay
-makepkg -si PKGBUILD
+su c 'cd ~ && git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si PKGBUILD' $user
 echo "Done!"
