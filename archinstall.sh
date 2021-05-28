@@ -1,22 +1,23 @@
 #!/usr/bin/env bash
 clear
 echo "My arch installer!"
-pacman --noconfirm archlinux-keyring
+pacman --noconfirm -Sy archlinux-keyring
 loadkeys fr
 timedatectl set-ntp true
 clear && lsblk
-echo "Enter device name: "
+echo "Enter device name (full path) : "
 read device
 fdisk $device
 echo "Now! Mount and make file systems on partitions manually"
 sed '1,/^#install$/d' $0 > archinstall_2.sh
+chmod +x archinstall_2.sh
 exit
 
 #install
 clear
 echo "Mount point of system partition (full path):"
 read syspart
-pacstrap $syspart base base-devel linux linux-firmware vim git
+pacstrap $syspart base base-devel linux linux-firmware grub vim git
 genfstab -U $syspart >> $syspart/etc/fstab
 
 sed '1,/^#config$/d' $0 > $syspart/archconfig.sh
@@ -41,18 +42,20 @@ mkinitcpio -P
 passwd
 clear
 lsblk
-echo "Installing grub, device: ?"
+echo "Installing grub on, device (full path) : "
 read device
-pacman --noconfirm -S grub
 grub-install $device
 grub-mkconfig -o /boot/grub/grub.cfg
 echo "Installing some necessary programs ... "
 pacman -S --noconfirm pulseaudio pulseaudio-alsa alsa-utils networkmanager firefox pamixer vim vi
-git clone https://aur.archlinux.org/yay.git && cd yay
-makepkg -si PKGBUILD
+systemctl enable NetworkManager
 echo "Username? : "
 read user
 useradd -m -G wheel -s /bin/bash $user
 passwd $user
 visudo
+su $user
+cd ~
+git clone https://aur.archlinux.org/yay.git && cd yay
+makepkg -si PKGBUILD
 echo "Done!"
