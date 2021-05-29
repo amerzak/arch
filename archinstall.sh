@@ -17,7 +17,7 @@ exit
 clear
 echo "Mount point of system partition (full path):"
 read syspart
-pacstrap $syspart base base-devel linux linux-firmware grub vim git
+pacstrap $syspart base base-devel linux linux-firmware grub vim git stow
 genfstab -U $syspart >> $syspart/etc/fstab
 
 sed '1,/^#config$/d' $0 > $syspart/archconfig.sh
@@ -35,7 +35,7 @@ echo "KEYMAP=fr" > /etc/vconsole.conf
 echo "Hostname? : "
 read hostname
 echo $hostname > /etc/hostname
-echo "127.0.0.1     localhost" >> /etc/hosts
+echo "127.0.0.1     localhost" > /etc/hosts
 echo "::1           localhost" >> /etc/hosts
 echo "127.0.1.1     $hostname.localdomain $hostname" >> /etc/hosts
 mkinitcpio -P
@@ -54,5 +54,6 @@ read user
 useradd -m -G wheel -s /bin/bash $user
 passwd $user
 visudo
-su c 'cd ~ && git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si PKGBUILD' $user
+su -c 'cd ~ && git clone https://aur.archlinux.org/yay.git && cd yay && makepkg --noconfirm -si PKGBUILD' $user
 echo "Done!"
+echo "Reboot now"
