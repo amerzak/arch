@@ -32,7 +32,7 @@ echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
 locale-gen
 echo "LANG=en_US.UTF-8" > /etc/locale.conf
 echo "KEYMAP=fr" > /etc/vconsole.conf
-echo "Hostname? : "
+echo -e "\033[32mHostname? : \033[0m"
 read hostname
 echo $hostname > /etc/hostname
 echo "127.0.0.1     localhost" > /etc/hosts
@@ -47,7 +47,7 @@ read device
 grub-install $device
 grub-mkconfig -o /boot/grub/grub.cfg
 echo -e "\033[32mInstalling some necessary programs ... \033[0m"
-pacman -S --noconfirm pulseaudio pulseaudio-alsa alsa-utils networkmanager firefox pamixer vim vi
+pacman -S --noconfirm pulseaudio pulseaudio-alsa alsa-utils networkmanager firefox pamixer vim vi xorg-server xorg-xinit unzip
 systemctl enable NetworkManager
 systemctl start NetworkManager
 echo -e "\033[32mUsername? : \033[0m"
@@ -55,7 +55,7 @@ read user
 useradd -m -G wheel -s /bin/bash $user
 passwd $user
 visudo
-ping -q -c 5 example.org > /dev/null || echo -e "\033[31mNo Internet!!\033[0m"
+ping -q -c 3 example.org > /dev/null || echo -e "\033[31mNo Internet!!\033[0m"
 su -c 'cd ~ && git clone https://aur.archlinux.org/yay.git && cd yay && makepkg --noconfirm -si PKGBUILD' $user
 echo -e "\033[34mDone!\033[0m"
 echo -e "\033[34mReboot now\033[0m"
