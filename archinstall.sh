@@ -55,6 +55,7 @@ read user
 useradd -m -G wheel -s /bin/bash $user
 passwd $user
 visudo
+ping -q -c 5 example.org > /dev/null || echo -e "\033[31mNo Internet!!\033[0m"
 su -c 'cd ~ && git clone https://aur.archlinux.org/yay.git && cd yay && makepkg --noconfirm -si PKGBUILD' $user
-echo -e "\033[33mDone!"
-echo -e "Reboot now\033[0m"
+echo -e "\033[34mDone!\033[0m"
+echo -e "\033[34mReboot now\033[0m"
