@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
+#
+# to download the file:
+# curl https://raw.githubusercontent.com/amerzak/arch/master/archinstall.sh >> archinstall.sh && chmod +x archinstall.sh
+#
+
+# begin
 clear
 echo -e "\033[32mMy arch installer!\033[0m"
 pacman --noconfirm -Sy archlinux-keyring
