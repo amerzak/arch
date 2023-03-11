@@ -8,15 +8,16 @@
 clear
 echo -e "\033[32mMy arch installer!\033[0m"
 pacman --noconfirm -Sy archlinux-keyring
-loadkeys fr
+#loadkeys fr
 timedatectl set-ntp true
 clear && lsblk
 echo -e "\033[32mEnter device name (full path) : \033[0m"
 read device
 fdisk $device
 echo -e "\033[32mNow! Mount and make file systems on partitions manually\033[0m"
-sed '1,/^#install$/d' $0 > archinstall_2.sh
-chmod +x archinstall_2.sh
+sed '1,/^#install$/d' $0 > archinstallation.sh
+chmod +x archinstallation.sh
+./archinsrallation.sh
 exit
 
 #install
@@ -53,14 +54,25 @@ read device
 grub-install $device
 grub-mkconfig -o /boot/grub/grub.cfg
 echo -e "\033[32mInstalling some necessary programs ... \033[0m"
-pacman -S --noconfirm pulseaudio pulseaudio-alsa alsa-utils networkmanager firefox pamixer vim vi xorg-server xorg-xinit unzip
+pacman -S --noconfirm pulseaudio pulseaudio-alsa alsa-utils networkmanager firefox pamixer vim vi xorg-server xorg-xinit unzip zsh dash
 systemctl enable NetworkManager
 systemctl start NetworkManager
+
 echo -e "\033[32mUsername? : \033[0m"
 read user
-useradd -m -G wheel -s /bin/bash $user
+useradd -m -G wheel -s /bin/zsh $user
 passwd $user
 visudo
+
+sed '1,/^#setupuser$/d' $0 > archsetup.sh
+#chmod +x archsetup.sh
+asetup_path=/home/$username/archsetup.sh
+chown $username:$username $asetup_path
+chmod +x $asetup_path
+su -c $asetup_path -s /bin/sh $username
+exit 
+
+#setupuser
 ping -q -c 3 example.org > /dev/null || echo -e "\033[31mNo Internet!!\033[0m"
 su -c 'cd ~ && git clone https://aur.archlinux.org/yay.git && cd yay && makepkg --noconfirm -si PKGBUILD' $user
 echo -e "\033[34mDone!\033[0m"
