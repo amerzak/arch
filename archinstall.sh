@@ -17,7 +17,8 @@ fdisk $device
 echo -e "\033[32mNow! Mount and make file systems on partitions manually\033[0m"
 sed '1,/^#install$/d' $0 > archinstallation.sh
 chmod +x archinstallation.sh
-./archinsrallation.sh
+# change to to where you automate the mkfss and mount
+# ./archinsrallation.sh
 exit
 
 #install
@@ -60,16 +61,17 @@ systemctl start NetworkManager
 
 echo -e "\033[32mUsername? : \033[0m"
 read user
+export user=$user
 useradd -m -G wheel -s /bin/zsh $user
 passwd $user
 visudo
 
 sed '1,/^#setupuser$/d' $0 > archsetup.sh
 #chmod +x archsetup.sh
-asetup_path=/home/$username/archsetup.sh
-chown $username:$username $asetup_path
+asetup_path=/home/$user/archsetup.sh
+chown $username:$user $asetup_path
 chmod +x $asetup_path
-su -c $asetup_path -s /bin/sh $username
+su -c $asetup_path -s /bin/sh $user
 exit 
 
 #setupuser
